@@ -8,7 +8,7 @@
     zh: "雜貨船",
     def: "It has a large and clear open cargo carrying space. Break Bulk Cargo is loaded / unloaded in a very time-consuming process.",
     note: "貨艙大而空敞，艙口裝有水密艙蓋，並設二層甲板（分隔貨物並改善穩性）、甲板起重機或吊桿。壓載艙用以保證吃水及螺旋槳全浸，艏尖艙與艉尖艙用以調整縱傾，雙層底則分成艙櫃。",
-    model: "拖曳可旋轉船體。滾輪用以縮放。右鍵拖曳可平移。點選船上部件，或點選左側名稱。Cutaway 切開貨艙。Directions 顯示 port、starboard、bow、quarter。",
+    model: "拖曳可旋轉船體。滾輪用以縮放。右鍵拖曳可平移。在船上點選只會標示該部件，鏡頭與角度保持不動。點選左側名稱，鏡頭才會飛到該處。Cutaway 切開貨艙。Directions 顯示 port、starboard、bow、quarter。",
     source: "00_術語表_中英定義.md · General Cargo Ship；00_溫習清單.md · general cargo ship 特徵"
   };
 
@@ -21,7 +21,7 @@
   var hovered = null;
   var cutaway = false;
   var directions = false;
-  var focusT = 0;
+  var flight = null;
   var dragging = false;
   var drag = null;
 
@@ -299,13 +299,13 @@
   function addEnds() {
     addBox(0.55, 8.2, 1.1, 0, 8.4, 61.1, mat("stem", 0x243244, { clip: true }), "stem");
     addBox(13.2, 10.4, 0.45, 0, 5.6, -60.5, mat("stern", 0x243244, { clip: true }), "stern");
-    addBox(0.12, 5.5, 0.12, 0, 14.2, 62.2, mat("staff", 0xd7dde4), "jack-staff");
-    addBox(0.12, 6.2, 0.12, 0, 16.4, -62.2, mat("staff", 0xd7dde4), "ensign-staff");
+    addBox(0.12, 5.5, 0.12, 0, 14.2, 62.2, mat("jack-staff", 0xd7dde4), "jack-staff");
+    addBox(0.12, 6.2, 0.12, 0, 16.4, -62.2, mat("ensign-staff", 0xd7dde4), "ensign-staff");
   }
 
   function addCastles() {
-    addBox(12.4, 2.5, 20, 0, 12.3, 47, mat("castle", 0x3f5148, { clip: true, roughness: 0.9 }), "forecastle");
-    addBox(15.2, 2.6, 28, 0, 12.35, -44, mat("castle", 0x3f5148, { clip: true, roughness: 0.9 }), "poop");
+    addBox(12.4, 2.5, 20, 0, 12.3, 47, mat("forecastle", 0x3f5148, { clip: true, roughness: 0.9 }), "forecastle");
+    addBox(15.2, 2.6, 28, 0, 12.35, -44, mat("poop", 0x3f5148, { clip: true, roughness: 0.9 }), "poop");
     addBox(15.4, 0.16, 52, 0, 10.22, 2, mat("deck", 0x5d6d5c, { clip: true, roughness: 0.94 }), "main-deck", "always", ["weather-deck"]);
     addBox(16, 0.45, 52, 0, 10.55, 2, mat("waist", 0xe2b15c, { ghost: true }), "waist", "select");
   }
@@ -314,7 +314,7 @@
     var white = mat("house", 0xe7eef3, { clip: true, roughness: 0.55, metalness: 0.04 });
     addBox(11.5, 4.6, 16, 0, 15.6, -44, white, "superstructure");
     addBox(9.2, 2.8, 12, 0, 19.2, -43, white, "superstructure");
-    addBox(14.2, 2.1, 7.2, 0, 21.6, -41.5, white, "bridge");
+    addBox(14.2, 2.1, 7.2, 0, 21.6, -41.5, mat("bridge-paint", 0xe7eef3, { clip: true, roughness: 0.55, metalness: 0.04 }), "bridge");
     addBox(12.6, 0.7, 0.25, 0, 21.7, -37.8, mat("glass", 0x17324a, { clip: true, metalness: 0.2, roughness: 0.2 }), "bridge");
     var funnel = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.55, 6.2, 16), mat("funnel", 0x243044, { roughness: 0.5 }));
     funnel.position.set(0, 22.2, -50.5);
@@ -378,8 +378,8 @@
 
   function addTanks() {
     addBox(14.5, 1.65, 86, 0, 1.15, -2, mat("db", 0x2f6d62, { clip: true, roughness: 0.85, side: THREE.DoubleSide }), "double-bottom", "cutaway", ["ballast"]);
-    addBox(8, 6.2, 10, 0, 4.6, 50, mat("peak", 0x2c6e90, { clip: true, roughness: 0.7, side: THREE.DoubleSide }), "fore-peak", "cutaway", ["ballast"]);
-    addBox(10, 5.4, 9, 0, 4.2, -54, mat("peak", 0x2c6e90, { clip: true, roughness: 0.7, side: THREE.DoubleSide }), "aft-peak", "cutaway", ["ballast"]);
+    addBox(8, 6.2, 10, 0, 4.6, 50, mat("fore-peak", 0x2c6e90, { clip: true, roughness: 0.7, side: THREE.DoubleSide }), "fore-peak", "cutaway", ["ballast"]);
+    addBox(10, 5.4, 9, 0, 4.2, -54, mat("aft-peak", 0x2c6e90, { clip: true, roughness: 0.7, side: THREE.DoubleSide }), "aft-peak", "cutaway", ["ballast"]);
     addBox(12, 6.2, 12, 0, 5.4, -40, mat("er", 0x8a5a3c, { clip: true, roughness: 0.8, side: THREE.DoubleSide }), "engine-room", "cutaway");
     var engine = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.5, 4.2, 12), mat("engine", 0x5c463c, { clip: true }));
     engine.position.set(0, 4.6, -40);
@@ -411,8 +411,40 @@
 
     var gang = addBox(8.5, 0.12, 0.95, -13.2, 9.15, 6, mat("gang", 0xc2ad8e, { roughness: 0.8 }), "gangway");
     gang.rotation.z = 0.42;
-    var ladder = addBox(11, 0.1, 0.8, -14.5, 8.6, -30, mat("ladder", 0xd5dbe3, { metalness: 0.25, roughness: 0.4 }), "accommodation-ladder");
-    ladder.rotation.z = 0.55;
+    addAccommodationLadder();
+  }
+
+  function addAccommodationLadder() {
+    var z = -22;
+    var edge = -halfBeam(z);
+    var top = new THREE.Vector3(edge - 0.2, deckY(z) + 0.42, z);
+    var foot = new THREE.Vector3(edge - 6.6, WL + 0.35, z);
+    var railMat = mat("ladder-rail", 0xf7f4ee, { roughness: 0.42, metalness: 0.18 });
+    var stepMat = mat("ladder-step", 0x4e5966, { roughness: 0.55, metalness: 0.12 });
+    var dir = foot.clone().sub(top);
+    var len = dir.length();
+    var mid = top.clone().add(foot).multiplyScalar(0.5);
+    var angle = Math.atan2(dir.y, dir.x);
+    var span = 0.72;
+    [-span, span].forEach(function (sz) {
+      var stringer = addBox(len, 0.16, 0.14, mid.x, mid.y, z + sz, railMat, "accommodation-ladder");
+      stringer.rotation.z = angle;
+      var hand = addBox(len, 0.09, 0.09, mid.x, mid.y + 1.05, z + sz, railMat, "accommodation-ladder");
+      hand.rotation.z = angle;
+    });
+    var steps = 6;
+    var i;
+    for (i = 0; i <= steps; i++) {
+      var p = top.clone().lerp(foot, i / steps);
+      [-span, span].forEach(function (sz) {
+        addBox(0.08, 1.05, 0.08, p.x, p.y + 0.52, z + sz, railMat, "accommodation-ladder");
+      });
+      if (i > 0 && i < steps) {
+        addBox(0.42, 0.1, span * 2 + 0.2, p.x, p.y + 0.08, z, stepMat, "accommodation-ladder");
+      }
+    }
+    addBox(2.4, 0.14, 1.7, top.x - 0.85, top.y, z, railMat, "accommodation-ladder");
+    addBox(1.5, 0.12, 1.55, foot.x - 0.55, foot.y, z, stepMat, "accommodation-ladder");
   }
 
   function addAnchor() {
@@ -633,6 +665,16 @@
     });
   }
 
+  var flashColor = new THREE.Color(0xffd27a);
+
+  function ensureBase(material) {
+    var data = material.userData;
+    if (data.baseColor) return;
+    data.baseColor = material.color.clone();
+    data.baseEmissiveColor = material.emissive.clone();
+    data.baseIntensity = material.emissiveIntensity;
+  }
+
   function applyHighlight() {
     var seen = [];
     pickables.forEach(function (mesh) {
@@ -642,19 +684,39 @@
       var related = pickables.filter(function (p) { return p.material === material; });
       var on = related.some(function (p) { return meshMatches(p, selected); });
       var hover = related.some(function (p) { return p === hovered; });
-      if (material.emissive) {
-        if (on || hover) {
-          material.emissive.setHex(0xd89a3a);
-          material.emissiveIntensity = on ? 0.55 : 0.25;
-        } else {
-          material.emissive.setHex(material.userData.baseEmissive || 0);
-          material.emissiveIntensity = material.userData.baseEmissive ? 0.85 : 0;
-        }
-      }
-      if (material.userData.ghost) {
+      material.userData.hot = on ? "on" : hover ? "hover" : "";
+      if (material.userData.ghost && !on) {
         var directional = related.some(function (p) { return p.userData.mode === "directions"; });
-        if (directional) material.opacity = on ? 0.82 : 0.5;
-        else material.opacity = on ? 0.32 : hover ? 0.16 : 0;
+        if (directional) material.opacity = 0.5;
+        else material.opacity = hover ? 0.16 : 0;
+      }
+    });
+    pulseHighlight(performance.now());
+  }
+
+  function pulseHighlight(now) {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var wave = reduce ? 0.78 : (Math.sin(now * 0.0025) + 1) / 2;
+    var seen = [];
+    pickables.forEach(function (mesh) {
+      var material = mesh.material;
+      if (!material || !material.color || seen.indexOf(material) !== -1) return;
+      seen.push(material);
+      ensureBase(material);
+      var hot = material.userData.hot;
+      if (hot === "on") {
+        material.color.copy(material.userData.baseColor).lerp(flashColor, 0.16 + wave * 0.78);
+        material.emissive.setHex(0xffb020);
+        material.emissiveIntensity = 0.12 + wave * 1.85;
+        if (material.userData.ghost) material.opacity = 0.34 + wave * 0.62;
+      } else if (hot === "hover") {
+        material.color.copy(material.userData.baseColor).lerp(flashColor, 0.34);
+        material.emissive.setHex(0xe0a24a);
+        material.emissiveIntensity = 0.5;
+      } else {
+        material.color.copy(material.userData.baseColor);
+        material.emissive.copy(material.userData.baseEmissiveColor);
+        material.emissiveIntensity = material.userData.baseIntensity;
       }
     });
   }
@@ -669,11 +731,50 @@
     camera.lookAt(state.target);
   }
 
-  function approachAngle(cur, next, t) {
-    var d = next - cur;
+  function yawDelta(from, to) {
+    var d = to - from;
     while (d > Math.PI) d -= Math.PI * 2;
     while (d < -Math.PI) d += Math.PI * 2;
-    return cur + d * t;
+    return d;
+  }
+
+  function beginFlight() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      state.target.copy(goal.target);
+      state.dist = goal.dist;
+      state.yaw = goal.yaw;
+      state.pitch = goal.pitch;
+      flight = null;
+      updateCamera();
+      return;
+    }
+    var delta = yawDelta(state.yaw, goal.yaw);
+    var travel = Math.max(
+      Math.abs(delta) / 1.4,
+      Math.abs(goal.pitch - state.pitch) / 0.6,
+      Math.abs(goal.dist - state.dist) / 120,
+      state.target.distanceTo(goal.target) / 50
+    );
+    flight = {
+      t0: performance.now(),
+      dur: 320 + 680 * Math.min(1, travel),
+      fromTarget: state.target.clone(),
+      fromDist: state.dist,
+      fromYaw: state.yaw,
+      yawDelta: delta,
+      fromPitch: state.pitch
+    };
+  }
+
+  function stepFlight(now) {
+    if (!flight) return;
+    var t = Math.min(1, (now - flight.t0) / flight.dur);
+    var e = 1 - Math.pow(1 - t, 3);
+    state.target.lerpVectors(flight.fromTarget, goal.target, e);
+    state.dist = flight.fromDist + (goal.dist - flight.fromDist) * e;
+    state.yaw = flight.fromYaw + flight.yawDelta * e;
+    state.pitch = flight.fromPitch + (goal.pitch - flight.fromPitch) * e;
+    if (t >= 1) flight = null;
   }
 
   function focusOn(id) {
@@ -702,17 +803,7 @@
       goal.dist = Math.max(36, Math.min(62, size * 0.95));
       goal.target.set(0, Math.max(4.2, Math.min(7.2, center.y)), center.z);
     }
-    snapGoal();
-  }
-
-  function snapGoal() {
-    state.target.copy(goal.target);
-    state.dist = goal.dist;
-    state.yaw = goal.yaw;
-    state.pitch = goal.pitch;
-    focusT = 0;
-    updateCamera();
-    renderer.render(scene, camera);
+    beginFlight();
   }
 
   function renderDetail(id) {
@@ -766,21 +857,22 @@
         zh.textContent = t.zh;
         button.appendChild(en);
         button.appendChild(zh);
-        button.addEventListener("click", function () { select(t.id); });
+        button.addEventListener("click", function () { select(t.id, true); });
         section.appendChild(button);
       });
       root.appendChild(section);
     });
   }
 
-  function select(id) {
+  function select(id, fly) {
     selected = id;
     var term = TERM[id];
     if (term && term.cutaway) setCutaway(true, true);
     else if (cutaway) setCutaway(false, true);
     if (term && term.directions) setDirections(true, true);
     else if (directions) setDirections(false, true);
-    focusOn(id);
+    if (fly) focusOn(id);
+    else flight = null;
     renderDetail(id);
     renderList();
     applyVisibility();
@@ -806,7 +898,7 @@
       goal.pitch = 0.24;
       goal.dist = 62;
       goal.target.set(0, 6, 2);
-      snapGoal();
+      beginFlight();
     }
     if (!keepSelection) {
       applyVisibility();
@@ -855,7 +947,7 @@
   canvas.addEventListener("pointerdown", function (event) {
     dragging = true;
     drag = { x: event.clientX, y: event.clientY, ox: event.clientX, oy: event.clientY, button: event.button };
-    focusT = 0;
+    flight = null;
     canvas.setPointerCapture(event.pointerId);
   });
   canvas.addEventListener("pointerup", function (event) {
@@ -865,7 +957,7 @@
     drag = null;
     if (button === 0 && moved < 5) {
       var hit = raycast(event);
-      if (hit && hit.userData.term) select(hit.userData.term);
+      if (hit && hit.userData.term) select(hit.userData.term, false);
     }
   });
   canvas.addEventListener("pointermove", function (event) {
@@ -895,7 +987,7 @@
     event.preventDefault();
     state.dist = Math.max(16, Math.min(170, state.dist * Math.exp(event.deltaY * 0.0012)));
     goal.dist = state.dist;
-    focusT = 0;
+    flight = null;
   }, { passive: false });
   canvas.addEventListener("contextmenu", function (event) { event.preventDefault(); });
 
@@ -914,7 +1006,7 @@
     goal.dist = 210;
     goal.yaw = 0.95;
     goal.pitch = 0.52;
-    focusT = 1;
+    beginFlight();
     renderDetail(null);
     renderList();
     applyVisibility();
@@ -948,14 +1040,9 @@
 
   function frame() {
     requestAnimationFrame(frame);
-    if (focusT > 0 && !dragging) {
-      state.target.lerp(goal.target, 0.12);
-      state.dist += (goal.dist - state.dist) * 0.12;
-      state.yaw = approachAngle(state.yaw, goal.yaw, 0.1);
-      state.pitch += (goal.pitch - state.pitch) * 0.1;
-      focusT *= 0.9;
-      if (focusT < 0.02) focusT = 0;
-    }
+    var now = performance.now();
+    stepFlight(now);
+    pulseHighlight(now);
     updateCamera();
     renderer.render(scene, camera);
     placeLabels();

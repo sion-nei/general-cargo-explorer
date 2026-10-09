@@ -141,6 +141,7 @@ var TERMS = [
   { id: "accommodation-ladder", group: "Decks", en: "Accommodation ladder", zh: "舷梯",
     def: "",
     note: "法定要求：註冊長度 120 米或以上的船舶須備有（第 369AH 章）。與 gangway 的長度標準不同，容易混淆。",
+    model: "已放下的舷梯：上平台、兩條扶手及橫踏板，由甲板斜向水面。Gangway 是旁邊那塊斜板。",
     source: "00_術語表_中英定義.md · 船體結構" },
   { id: "mast", group: "Decks", en: "Mast", zh: "桅",
     def: "The Mast is forward, while the funnel is aft when defining an object.",

@@ -122,6 +122,16 @@ button, input {
 .term[aria-current="true"] {
   border-color: var(--gold);
   background: var(--gold-dim);
+  animation: term-flash 2.4s ease-in-out infinite;
+}
+
+@keyframes term-flash {
+  0%, 100% { background: rgba(226, 177, 92, 0.1); }
+  50% { background: rgba(226, 177, 92, 0.48); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term[aria-current="true"] { animation: none; }
 }
 
 #stage { position: relative; min-height: 0; background: #8ea4b8; }
