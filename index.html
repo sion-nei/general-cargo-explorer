@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>General cargo ship</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="title">
+      <p class="kicker">TRN4211 · General ship knowledge</p>
+      <h1>General cargo ship</h1>
+    </div>
+    <div class="tools">
+      <button type="button" id="cutaway" aria-pressed="false">Cutaway 切開</button>
+      <button type="button" id="directions" aria-pressed="false">Directions 方向</button>
+      <button type="button" id="reset">Reset 重設</button>
+    </div>
+  </header>
+  <div id="shell">
+    <aside id="list">
+      <label class="search">
+        <span>Search 搜尋</span>
+        <input id="q" type="search" placeholder="port, hatch, 龍骨" autocomplete="off">
+      </label>
+      <div id="groups"></div>
+    </aside>
+    <main id="stage">
+      <canvas id="c"></canvas>
+      <div id="labels"></div>
+      <p id="hint">Drag 拖曳旋轉 · Scroll 縮放 · Right-drag 平移 · Click 點選部件</p>
+    </main>
+    <aside id="detail">
+      <p id="d-group" class="kicker"></p>
+      <h2 id="d-en"></h2>
+      <p id="d-zh"></p>
+      <section id="d-def-wrap">
+        <h3>講義英文</h3>
+        <p id="d-def"></p>
+      </section>
+      <section id="d-note-wrap">
+        <h3>筆記</h3>
+        <p id="d-note"></p>
+      </section>
+      <section id="d-model-wrap">
+        <h3>本模型</h3>
+        <p id="d-model"></p>
+      </section>
+      <p id="d-source" class="source"></p>
+    </aside>
+  </div>
+  <script src="vendor/three.min.js"></script>
+  <script src="terms.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
