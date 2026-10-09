@@ -539,8 +539,9 @@
       light.position.set(sgn * 1.8, 12.8, 58.5);
       track(light, term, "directions");
     }
-    wash(-1, "port", 0xc0392b);
-    wash(1, "starboard", 0x1e8f45);
+    // Bow is +Z. Facing +Z, the right hand is −X, so starboard is −X and port is +X.
+    wash(1, "port", 0xc0392b);
+    wash(-1, "starboard", 0x1e8f45);
     addBox(0.22, 0.22, 8, 0, 15.2, 18, mat("fwd", 0xf3e2a8, { emissive: 0xf3e2a8, emissiveIntensity: 0.4 }), "forward", "directions");
     addBox(0.7, 0.18, 1.1, 0, 15.2, 22.4, mat("fwd", 0xf3e2a8, { emissive: 0xf3e2a8, emissiveIntensity: 0.4 }), "forward", "directions");
     addBox(0.22, 0.22, 8, 0, 15.2, -8, mat("aft", 0xf3e2a8, { emissive: 0xf3e2a8, emissiveIntensity: 0.4 }), "aft", "directions");
@@ -589,8 +590,8 @@
   addWater();
 
   var LABEL_POS = [
-    { id: "port", x: -16, y: 13, z: 4 },
-    { id: "starboard", x: 16, y: 13, z: 4 },
+    { id: "port", x: 16, y: 13, z: 4 },
+    { id: "starboard", x: -16, y: 13, z: 4 },
     { id: "bow", x: 0, y: 15, z: 64 },
     { id: "quarter", x: -12, y: 12, z: -42 },
     { id: "forward", x: 0, y: 16.4, z: 20 },

@@ -252,7 +252,7 @@ var TERMS = [
     source: "00_術語表_中英定義.md · 要背 · 吃水、乾舷、浮力" },
   { id: "draught-marks", group: "Marks", en: "Draught marks", zh: "吃水標尺",
     def: "They are usually positioned at the bows, stern and amidships. The marks are one metre apart, and only even numbers are used.",
-    note: "相距 1 米，只用雙數。船首 12 米、船尾 13 米時，船首水線觸及「12」的下緣，船尾水線觸及上緣。",
+    note: "相距 1 米，只用雙數。船首 12 米、船尾 13 米時，船首水線觸及「12」的下緣，船尾水線觸及「12」的上緣。",
     model: "模型上的數字已放大，以便點選。並非講義中 12 米／13 米的例子。",
     source: "00_術語表_中英定義.md · 方位、報告與通訊用語" },
   { id: "freeboard", group: "Marks", en: "Freeboard", zh: "乾舷",
