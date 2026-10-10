@@ -3,22 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>General cargo ship</title>
+  <title>Hatch and watertight door</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <div class="title">
       <p class="kicker">TRN4211 · General ship knowledge</p>
-      <h1>General cargo ship</h1>
+      <h1>Hatch and watertight door</h1>
       <nav class="models" aria-label="模型">
-        <a href="index.html" aria-current="page">雜貨船</a>
-        <a href="closures.html">艙口與水密門</a>
+        <a href="index.html">雜貨船</a>
+        <a href="closures.html" aria-current="page">艙口與水密門</a>
       </nav>
     </div>
     <div class="tools">
-      <button type="button" id="cutaway" aria-pressed="false">Cutaway 切開</button>
-      <button type="button" id="directions" aria-pressed="false">Directions 方向</button>
       <button type="button" id="reset">Reset 重設</button>
     </div>
   </header>
@@ -26,13 +24,12 @@
     <aside id="list">
       <label class="search">
         <span>Search 搜尋</span>
-        <input id="q" type="search" placeholder="port, hatch, 龍骨" autocomplete="off">
+        <input id="q" type="search" placeholder="dog, beam, 艙蓋" autocomplete="off">
       </label>
       <div id="groups"></div>
     </aside>
     <main id="stage">
       <canvas id="c"></canvas>
-      <div id="labels"></div>
       <p class="hint hint-desktop">Drag 拖曳旋轉 · Scroll 縮放 · Right-drag 平移 · Click 點選部件</p>
       <p class="hint hint-touch">單指拖曳旋轉 · 雙指縮放及平移 · 點選部件</p>
     </main>
@@ -64,7 +61,7 @@
     </aside>
   </div>
   <script src="vendor/three.min.js"></script>
-  <script src="terms.js"></script>
-  <script src="app.js"></script>
+  <script src="closures-terms.js"></script>
+  <script src="closures.js"></script>
 </body>
 </html>

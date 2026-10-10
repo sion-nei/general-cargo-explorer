@@ -815,6 +815,8 @@
     setBlock("d-note-wrap", "d-note", data.note);
     setBlock("d-model-wrap", "d-model", data.model);
     document.getElementById("d-source").textContent = data.source || "";
+    var name = document.getElementById("detail-name");
+    if (name) name.textContent = id ? data.zh : "";
   }
 
   function setBlock(wrapId, textId, value) {
@@ -871,8 +873,10 @@
     else if (cutaway) setCutaway(false, true);
     if (term && term.directions) setDirections(true, true);
     else if (directions) setDirections(false, true);
-    if (fly) focusOn(id);
-    else flight = null;
+    if (fly) {
+      focusOn(id);
+      if (window.matchMedia("(max-width: 860px)").matches) setSheet("");
+    } else flight = null;
     renderDetail(id);
     renderList();
     applyVisibility();
@@ -944,24 +948,73 @@
     goal.target.copy(state.target);
   }
 
+  var pointers = {};
+  var pinch = null;
+  var pinched = false;
+
+  function pointerIds() {
+    return Object.keys(pointers);
+  }
+
+  function rememberPinch() {
+    var ids = pointerIds();
+    if (ids.length < 2) {
+      pinch = null;
+      return;
+    }
+    var a = pointers[ids[0]];
+    var b = pointers[ids[1]];
+    pinch = {
+      dist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)),
+      cx: (a.x + b.x) / 2,
+      cy: (a.y + b.y) / 2,
+      camDist: state.dist
+    };
+    pinched = true;
+    dragging = false;
+  }
+
   canvas.addEventListener("pointerdown", function (event) {
-    dragging = true;
-    drag = { x: event.clientX, y: event.clientY, ox: event.clientX, oy: event.clientY, button: event.button };
+    pointers[event.pointerId] = { x: event.clientX, y: event.clientY };
     flight = null;
     canvas.setPointerCapture(event.pointerId);
-  });
-  canvas.addEventListener("pointerup", function (event) {
-    var moved = drag ? Math.hypot(event.clientX - drag.ox, event.clientY - drag.oy) : 99;
-    var button = drag ? drag.button : 0;
-    dragging = false;
-    drag = null;
-    if (button === 0 && moved < 5) {
-      var hit = raycast(event);
-      if (hit && hit.userData.term) select(hit.userData.term, false);
+    if (pointerIds().length >= 2) rememberPinch();
+    else {
+      dragging = true;
+      drag = {
+        x: event.clientX,
+        y: event.clientY,
+        ox: event.clientX,
+        oy: event.clientY,
+        button: event.button,
+        type: event.pointerType
+      };
     }
   });
+  function endPointer(event) {
+    if (!pointers[event.pointerId]) return;
+    var moved = drag ? Math.hypot(event.clientX - drag.ox, event.clientY - drag.oy) : 99;
+    var button = drag ? drag.button : 0;
+    var type = drag ? drag.type : "";
+    var wasPinch = pinched;
+    delete pointers[event.pointerId];
+    if (pointerIds().length >= 2) rememberPinch();
+    else pinch = null;
+    if (pointerIds().length === 0) {
+      dragging = false;
+      drag = null;
+      pinched = false;
+      var limit = type === "touch" ? 16 : 5;
+      if (!wasPinch && button === 0 && moved < limit) {
+        var hit = raycast(event);
+        if (hit && hit.userData.term) select(hit.userData.term, false);
+      }
+    }
+  }
+  canvas.addEventListener("pointerup", endPointer);
+  canvas.addEventListener("pointercancel", endPointer);
   canvas.addEventListener("pointermove", function (event) {
-    if (!dragging || !drag) {
+    if (!pointers[event.pointerId]) {
       var hit = raycast(event);
       var next = hit && hit.userData.term ? hit : null;
       if (next !== hovered) {
@@ -971,6 +1024,25 @@
       }
       return;
     }
+    pointers[event.pointerId].x = event.clientX;
+    pointers[event.pointerId].y = event.clientY;
+    if (pinch && pointerIds().length >= 2) {
+      var ids = pointerIds();
+      var a = pointers[ids[0]];
+      var b = pointers[ids[1]];
+      var dist = Math.max(1, Math.hypot(a.x - b.x, a.y - b.y));
+      var cx = (a.x + b.x) / 2;
+      var cy = (a.y + b.y) / 2;
+      state.dist = Math.max(16, Math.min(280, pinch.camDist * (pinch.dist / dist)));
+      goal.dist = state.dist;
+      pan(cx - pinch.cx, cy - pinch.cy);
+      pinch.dist = dist;
+      pinch.cx = cx;
+      pinch.cy = cy;
+      pinch.camDist = state.dist;
+      return;
+    }
+    if (!dragging || !drag) return;
     var dx = event.clientX - drag.x;
     var dy = event.clientY - drag.y;
     drag.x = event.clientX;
@@ -985,7 +1057,7 @@
   });
   canvas.addEventListener("wheel", function (event) {
     event.preventDefault();
-    state.dist = Math.max(16, Math.min(170, state.dist * Math.exp(event.deltaY * 0.0012)));
+    state.dist = Math.max(16, Math.min(280, state.dist * Math.exp(event.deltaY * 0.0012)));
     goal.dist = state.dist;
     flight = null;
   }, { passive: false });
@@ -1013,6 +1085,22 @@
     applyHighlight();
   });
   document.getElementById("q").addEventListener("input", renderList);
+
+  function setSheet(which) {
+    document.body.classList.toggle("show-list", which === "list");
+    document.body.classList.toggle("show-detail", which === "detail");
+    document.getElementById("open-list").setAttribute("aria-expanded", which === "list" ? "true" : "false");
+    document.getElementById("open-detail").setAttribute("aria-expanded", which === "detail" ? "true" : "false");
+  }
+  document.getElementById("open-list").addEventListener("click", function () {
+    setSheet(document.body.classList.contains("show-list") ? "" : "list");
+  });
+  document.getElementById("open-detail").addEventListener("click", function () {
+    setSheet(document.body.classList.contains("show-detail") ? "" : "detail");
+  });
+  document.getElementById("sheet-scrim").addEventListener("click", function () {
+    setSheet("");
+  });
   window.addEventListener("keydown", function (event) {
     if (event.key === "Escape") document.getElementById("reset").click();
   });
